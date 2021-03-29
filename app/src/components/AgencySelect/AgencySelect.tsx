@@ -1,27 +1,30 @@
 import { ComponentProps, ChangeEvent, useState} from 'react';
 
-export type Agency = {
-    id: string;
-    name: string;
-}
-export type AgencySelectProps = {
-    agencies: Agency[];
-    onSelect: (value: string | null, event: ChangeEvent<HTMLSelectElement>) => void;
-}
+import { Agency } from '../../Business/Model';
 
+type AgencySelectProps = {
+    agencies: Agency[];
+    onSelect?: (value: Agency, event: ChangeEvent<HTMLSelectElement>) => void;
+    selectedAgency?: Agency;
+}
 type Props = AgencySelectProps & ComponentProps<'select'>
-export const AgencySelect = ({ agencies, onSelect } : Props) => {
-    const [selectedAgency, setAgency] = useState<string | null>(null);
+
+export const AgencySelect = ({ agencies, onSelect, selectedAgency } : Props) => {
+    const [agency, setAgency] = useState<Agency | undefined>(selectedAgency);
 
     return <div>
-        <select onChange={(event: ChangeEvent<HTMLSelectElement>) => {
-            setAgency(event?.target?.value);
-            onSelect(event?.target?.value || null, event)}
+        <select defaultValue={selectedAgency?.id} onChange={(event: ChangeEvent<HTMLSelectElement>) => {
+            if (event?.target?.value){
+                const agencyId = event.target.value
+                const newSelectedAgency = agencies.filter(agency => agency.id === agencyId)[0]
+                setAgency(newSelectedAgency);
+                onSelect && onSelect(newSelectedAgency, event)}
+            }
         }>
             {agencies.map(({ id, name }) =><option key={`agency-${id}-${name}`} value={id}>{name}</option>)}
         </select>
         {
-            selectedAgency && <p data-testid='agency-selected'>agency id {selectedAgency} selected</p>
+            agency && <p data-testid='agency-selected'>agency id {agency.id} selected</p>
         }
     </div>
 }

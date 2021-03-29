@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { AgencySelect } from './components/AgencySelect/';
+import type { Agency } from './Business/Model';
+import { useLocalStorage } from './hooks'
 
 function App() {
-  const fakeAgencies = [
+  const fakeAgencies = useMemo(() => [
     {
       id: '1',
       name: 'agency1'
@@ -15,13 +17,13 @@ function App() {
       id: '3',
       name: 'agency3'
     },
-  ]
-
-  const onSelect = (value: any) => value && console.log(value)
+  ], [])
+  const [agency, setAgency] = useLocalStorage('agency', fakeAgencies[1])
+  const onSelect = (agency: any) => setAgency(agency);
 
   return (
     <div className="App">
-      <AgencySelect agencies={fakeAgencies} onSelect={onSelect} />
+      <AgencySelect agencies={fakeAgencies} selectedAgency={agency} onSelect={onSelect} />
     </div>
   );
 }
