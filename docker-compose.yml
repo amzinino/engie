@@ -11,3 +11,14 @@ services:
       - "3001:8000"
     environment:
       NODE_ENV: development
+  app:
+    build:
+      context: ./app/
+    command: yarn start
+    volumes:
+      - ./app/:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: development
