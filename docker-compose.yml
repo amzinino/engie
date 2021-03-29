@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  back:
+    build:
+      context: ./back/
+    command: yarn start
+    volumes:
+      - ./back/:/usr/app
+      - /usr/app/node_modules
+    ports:
+      - "3001:8000"
+    environment:
+      NODE_ENV: development
